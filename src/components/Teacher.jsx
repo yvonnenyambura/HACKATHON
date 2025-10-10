@@ -30,11 +30,41 @@ const handleAddEvent = () => {
   setNewEvent("");
 };
 
-
-  const termStart = new Date("2025-08-23"); //school term start
+const termStart = new Date("2025-08-23"); //school term start
 const today = new Date();
 const weekNumber = Math.ceil((today - termStart) / (7 * 24 * 60 * 60 * 1000));
 
+const [newClassName, setNewClassName] = useState("");
+const [newClassSchedule, setNewClassSchedule] = useState("");
+const [newLastLesson, setNewLastLesson] = useState("");
+const [newLastAssignment, setNewLastAssignment] = useState("");
+const [newNextTopic, setNewNextTopic] = useState("");
+const [newNextAssignment, setNewNextAssignment] = useState("");
+
+const addClass = () => {
+  if (!newClassName.trim()) return alert("Please enter a class name.");
+
+  const newClass = {
+    name: newClassName,
+    students: 0,
+    studentsList: [],
+    schedule: newClassSchedule,
+    lastLesson: newLastLesson,
+    lastAssignment: newLastAssignment,
+    nextTopic: newNextTopic,
+    nextAssignment: newNextAssignment
+  };
+
+  setClasses([...classes, newClass]);
+
+  // Clear inputs after adding
+  setNewClassName("");
+  setNewClassSchedule("");
+  setNewLastLesson("");
+  setNewLastAssignment("");
+  setNewNextTopic("");
+  setNewNextAssignment("");
+};
 
 
 
@@ -542,7 +572,7 @@ const gradingQueue = tasks
           </div>
         )}
 
-      {activeSection === "attendance" && (
+  {activeSection === "attendance" && (
   <div>
     <h1 className="text-4xl font-bold text-gray-800 mb-6">Attendance</h1>
 
@@ -561,15 +591,15 @@ const gradingQueue = tasks
           <tbody>
             {cls.studentsList.map((student, idx) => (
               <tr key={idx} className="hover:bg-gray-100 transition">
-                <td className="border-b p-2">{student}</td>
+                <td className="border-b p-2">{student.name}</td>
                 <td className="border-b p-2">
                   <select
                     className="p-1 border rounded"
-                    value={cls.attendance?.[student] || "Present"}
+                    value={cls.attendance?.[student.name] || "Present"}
                     onChange={(e) => {
                       const updatedClasses = [...classes];
                       if (!updatedClasses[i].attendance) updatedClasses[i].attendance = {};
-                      updatedClasses[i].attendance[student] = e.target.value;
+                      updatedClasses[i].attendance[student.name] = e.target.value;
                       setClasses(updatedClasses);
                     }}
                   >
@@ -586,6 +616,7 @@ const gradingQueue = tasks
     ))}
   </div>
 )}
+   
   
 
         {/* Tasks Section */}
@@ -670,7 +701,7 @@ const gradingQueue = tasks
       </button>
     </div>
 
-    {/* Display resources */}
+    {/* Display resources */};
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {resources.map((res, i) => (
         <div key={i} className="bg-white p-6 rounded-xl shadow-lg">
@@ -701,7 +732,8 @@ const gradingQueue = tasks
 )}
 
 {activeSection === "community" && (
-  <div className="flex gap-6 h-[70vh] relative">
+  <div className="flex gap-6 h-[70vh]"> {/* Outer wrapper with fixed height */}
+    
     {/* Groups List */}
     <div className="w-64 bg-white shadow rounded p-4 overflow-y-auto">
       <h2 className="text-xl font-bold mb-4">Groups</h2>
@@ -717,46 +749,33 @@ const gradingQueue = tasks
     </div>
 
     {/* Chat Window */}
-    <div className="flex-1 flex flex-col bg-gray-50 rounded p-4 relative">
+    <div className="flex-1 flex flex-col bg-gray-50 rounded">
       {activeGroupId ? (
         <>
-          <div className="flex-1 overflow-y-auto mb-4 space-y-2">
+          {/* Chat header */}
+          <div className="bg-white p-3 rounded-t-lg shadow">
+            <h2 className="text-lg font-semibold text-gray-800">
+              {communityGroups.find(g => g.id === activeGroupId).name}
+            </h2>
+          </div>
+
+          {/* Messages container */}
+          <div className="flex-1 overflow-y-auto p-2">
             {communityGroups.find(g => g.id === activeGroupId).messages.map((msg, idx) => (
-              <div key={idx} className={`p-2 rounded max-w-xs ${msg.from === "You" ? "bg-indigo-600 text-white self-end" : "bg-white text-gray-800 self-start"}`}>
+              <div
+                key={idx}
+                className={`p-2 rounded max-w-xs mb-2 ${
+                  msg.from === "You" ? "bg-indigo-600 text-white self-end" : "bg-white text-gray-800 self-start"
+                }`}
+              >
                 <p className="text-sm opacity-70 mb-1">{msg.from} • {msg.time}</p>
                 <p>{msg.text}</p>
-
-                {/* Display attached files */}
-                {msg.files && msg.files.map((f, i) => (
-                  <div key={i} className="mt-2">
-                    {f.type.startsWith("image/") && <img src={URL.createObjectURL(f)} alt={f.name} className="w-32 h-32 object-cover rounded" />}
-                    {f.type.startsWith("video/") && <video className="w-48 rounded" controls><source src={URL.createObjectURL(f)} type={f.type} /></video>}
-                    {f.type === "application/pdf" && <a href={URL.createObjectURL(f)} download={f.name} className="text-indigo-600 underline">{f.name}</a>}
-                    {!f.type.startsWith("image/") && !f.type.startsWith("video/") && f.type !== "application/pdf" && <a href={URL.createObjectURL(f)} download={f.name} className="text-gray-700 underline">{f.name}</a>}
-                  </div>
-                ))}
               </div>
             ))}
           </div>
 
-          {/* Selected files preview */}
-          {groupFiles.length > 0 && (
-            <div className="flex gap-2 mb-2 overflow-x-auto">
-              {groupFiles.map((f, idx) => (
-                <div key={idx} className="relative">
-                  {f.type.startsWith("image/") ? (
-                    <img src={URL.createObjectURL(f)} alt={f.name} className="w-16 h-16 object-cover rounded" />
-                  ) : (
-                    <div className="w-16 h-16 bg-gray-100 rounded flex items-center justify-center text-xs text-gray-700 p-1">{f.name}</div>
-                  )}
-                  <button className="absolute -top-2 -right-2 text-xs bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center" onClick={() => setGroupFiles(groupFiles.filter((_, i) => i !== idx))}>✕</button>
-                </div>
-              ))}
-            </div>
-          )}
-
           {/* Input area */}
-          <div className="flex gap-2 items-center relative">
+          <div className="bg-white p-2 rounded-b-lg shadow flex gap-2 items-center">
             <input
               type="text"
               value={groupMessage}
@@ -765,33 +784,21 @@ const gradingQueue = tasks
               className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-400"
               onKeyDown={(e) => e.key === "Enter" && handleSendGroupMessage()}
             />
-
-            {/* Attachment button */}
-            <button className="bg-gray-200 px-3 py-2 rounded hover:bg-gray-300" onClick={(e) => { e.stopPropagation(); setShowGroupAttachmentOptions(!showGroupAttachmentOptions); }}>📎</button>
-
-            {/* Attachment options popup */}
-            {showGroupAttachmentOptions && (
-              <div ref={groupAttachmentRef} className="absolute bottom-12 right-12 bg-white shadow-lg rounded-lg p-2 flex flex-col gap-2 z-50">
-                <button className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded" onClick={() => document.getElementById("groupImageVideoInput").click()}>📷 Photo/Video</button>
-                <button className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded" onClick={() => document.getElementById("groupDocInput").click()}>📄 Document</button>
-                <button className="flex items-center gap-2 p-2 hover:bg-gray-100 rounded" onClick={() => document.getElementById("groupOtherInput").click()}>📎 Other</button>
-              </div>
-            )}
-
-            {/* Hidden file inputs */}
-            <input type="file" id="groupImageVideoInput" accept="image/*,video/*" className="hidden" multiple onChange={(e) => setGroupFiles([...groupFiles, ...Array.from(e.target.files)])} />
-            <input type="file" id="groupDocInput" accept=".pdf,.doc,.docx" className="hidden" multiple onChange={(e) => setGroupFiles([...groupFiles, ...Array.from(e.target.files)])} />
-            <input type="file" id="groupOtherInput" className="hidden" multiple onChange={(e) => setGroupFiles([...groupFiles, ...Array.from(e.target.files)])} />
-
-            <button onClick={handleSendGroupMessage} className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 transition">Send</button>
+            <button
+              className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-500 transition"
+              onClick={handleSendGroupMessage}
+            >
+              Send
+            </button>
           </div>
         </>
       ) : (
-        <p className="text-gray-500">Select a group to start chatting</p>
+        <p className="text-gray-500 p-4">Select a group to start chatting</p>
       )}
     </div>
   </div>
 )}
+
 
 
 
