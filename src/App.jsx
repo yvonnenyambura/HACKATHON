@@ -10,7 +10,7 @@ import TopNav from "./components/TopNav";
 function App() {
   return (
     <div>
-      {/* <Landing/> */}
+      <Landing/>
       {/* <Teacher/> */}
       <TopNav/>
   

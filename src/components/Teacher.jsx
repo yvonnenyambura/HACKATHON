@@ -10,6 +10,7 @@ import {
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import Footer from './Footer'
 
 
 const Teacher = () => {
@@ -313,6 +314,7 @@ const gradingQueue = tasks
     .sort((a, b) => (b.submissions - b.graded) - (a.submissions - a.graded));
 
   return (
+    <>
     <div className="flex min-h-screen bg-gray-100 font-inter">
       {/* Sidebar */}
       <div className="w-64 bg-indigo-600 text-white p-6 flex flex-col">
@@ -997,7 +999,11 @@ const gradingQueue = tasks
       </div>
     </div>
 
-  );
-};
+            
+                        
+      <Footer />
+        </>
+    );
+};     
 
 export default Teacher;

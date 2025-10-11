@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import bgVideo from "../assets/adelaidevideo.webm"; // your video path
+import bgVideo from "../assets/adelaidevideo.webm";
+import TopNav from ".//TopNav";
+import Footer from "./Footer";
 
 const Landing = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -103,7 +105,7 @@ const Landing = () => {
           transition: "transform 0.5s ease",
           zIndex: 9,
           display: "flex",
-          justifyContent: "flex-start", // keep panel on left side
+          justifyContent: "flex-start", 
         }}
       >
         <div
@@ -114,44 +116,18 @@ const Landing = () => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            alignItems: "flex-start", // menu links aligned left
+            alignItems: "flex-start", 
             gap: 30,
             color: "#fff",
           }}
         >
-          {/* Close button */}
-          <button
-            onClick={toggleMenu}
-            style={{
-              fontSize: 30,
-              fontWeight: "bold",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              marginBottom: 20,
-              color: "#fff",
-            }}
-          >
-            &times;
-          </button>
+        
 
-          {/* Menu links */}
-          <a href="#home" style={{ fontSize: 70, color: "#fff", textDecoration: "none" }}>
-            Home
-          </a>
-          <a href="#about" style={{ fontSize: 70, color: "#fff", textDecoration: "none" }}>
-            About
-          </a>
-          <a href="#admissions" style={{ fontSize: 70, color: "#fff", textDecoration: "none" }}>
-            Admissions
-          </a>
-          <a href="#contact" style={{ fontSize: 70, color: "#fff", textDecoration: "none" }}>
-            Contact
-          </a>
+        
         </div>
       </div>
 
-      {/* Bottom-right caption with three horizontal lines */}
+    
 <div
   style={{
     position: "absolute",
@@ -184,27 +160,26 @@ const Landing = () => {
 </div>
 
 
-{/* Vertical green line with horizontal "Explore" link */}
+
 <a
-  href="#next-section" // replace with your next section ID
+  href="#next-section" 
   style={{
     position: "absolute",
-    bottom: -100, // extends beyond the landing page
+    bottom: -100,
     left: 20,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     textDecoration: "none",
-    color: "#00ff00", // green
-    zIndex: 1,
+    color: "#00ff00", 
   }}
 >
-  {/* "Explore" horizontal text at the top */}
+ 
   <span style={{ fontWeight: "bold", marginBottom: 8, fontSize: "2rem" }}>
     Explore
   </span>
 
-  {/* Vertical line */}
+
   <div style={{ width: 3, height: "200px", backgroundColor: "#00ff00" }}></div>
 </a>
 
@@ -247,27 +222,12 @@ const Landing = () => {
       </div>
     </div>
     
-<section class="text-gray-600 body-font overflow-hidden">
-  <div class="container px-0 py-20 mx-auto">
-    <div class="lg:w-4/5 mx-auto flex flex-wrap">
-      <div class="lg:w-1/2 w-full lg:pr-10 lg:py-6 mb-6 lg:mb-0">
-        <h2 class="text-2xl title-font text-green-500 font-bold tracking-widest">Empowering today, excelling tomorrow</h2>
-        <h1 class="text-gray-900 text-5xl font-bold  title-font font-large mb-4">A hub of inspiration <br/>and growth</h1>
-        
-        <p class="leading-relaxed mb-4">Education here nurtures well-rounded young minds who think critically, act responsibly, and dream boldly. It's more than academics—it's about preparing students to succeed in life.</p>
-
-       
-      </div>
-      <img alt="ecommerce" class="lg:w-1/2 w-full lg:h-auto h-90 object-cover object-center rounded mb-8" src="students.jpg"/>
-
-<div class="flex justify-start">
-  <button class="flex text-white bg-blue-800 border-0 py-2 px-6 focus:outline-none hover:bg-green-900 rounded">About AcademIQ</button>
-</div>
-
-    </div>
-  </div>
-</section>
+<TopNav/>
+<Footer />
     </>
+
+
+      
 
     
   );
